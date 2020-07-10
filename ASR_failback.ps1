@@ -11,8 +11,16 @@ $token = $profileClient.AcquireAccessToken($currentAzureContext.Subscription.Ten
 ### Creating the request header.
 $Header = @{"authorization" = "bearer $token"}
 $Header['Content-Type'] = "application\json"
-$Url = "https://management.azure.com/Subscriptions/302ce6c4-c9fd-41b7-9b92-d41405a15eb6/resourceGroups/ASR/providers/Microsoft.RecoveryServices/vaults/recoveryvault/replicationFabrics/westeurope/replicationProtectionContainers/zone1/switchprotection?api-version=2018-07-10"
 
+
+#Get the values for the url and body
+
+
+
+
+
+
+$Url = "https://management.azure.com/Subscriptions/302ce6c4-c9fd-41b7-9b92-d41405a15eb6/resourceGroups/ASR/providers/Microsoft.RecoveryServices/vaults/recoveryvault/replicationFabrics/westeurope/replicationProtectionContainers/zone1/switchprotection?api-version=2018-07-10"
 $body = @{
   "properties"= @{
     "replicationProtectedItemName"= "6e0be008-83f0-4b18-9431-726ff9bed369"
