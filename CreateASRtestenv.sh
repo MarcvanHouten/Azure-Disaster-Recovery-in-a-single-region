@@ -55,10 +55,13 @@ az network nic create \
 az vm create \
   --resource-group $resourcegroupname \
   --name $vmname \
-  --image UbuntuLTS \
+  --image RedHat:RHEL:7.7:7.7.2020051912 \
   --size $vmsize \
   --admin-username azureuser \
   --generate-ssh-keys \
   --nics $nicname \
   --zone 1 \
   --ppg $sourceppg 
+
+ 
+  

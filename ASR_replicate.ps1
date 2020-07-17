@@ -6,6 +6,7 @@ $failoverresourcegroupname="ASRfailover"
 $vmname="myname"
 $location="west Europe"
 $newppgname="recppg"
+$vnetname="myvnet"
 
 #Create failover resource group
 New-AzResourceGroup -Name $failoverresourcegroupname -Location $location
@@ -101,6 +102,8 @@ $PCMapping = Get-AzRecoveryServicesAsrProtectionContainerMapping -ProtectionCont
 $CachestorageAccountname="cacheaccount99"
 $CacheStorageAccount = New-AzStorageAccount -Name $CachestorageAccountname -ResourceGroupName $sourceresourcegroupname -Location $location -SkuName Standard_LRS -Kind Storage
 
+#$CacheStorageAccount=Get-AzStorageAccount -Name $CachestorageAccountname -ResourceGroupName $sourceresourcegroupname
+
 #Get the resource group that the virtual machine must be created in when failed over.
 $RecoveryRG = Get-AzResourceGroup -Name $failoverresourcegroupname -Location $location
 
@@ -119,8 +122,10 @@ $diskconfigs += $OSDiskReplicationConfig
 
 $ppg = Get-AzProximityPlacementGroup -ResourceGroupName $sourceresourcegroupname -Name $newppgname
 
+$DestinationRecoveryNetwork=Get-AzVirtualNetwork -Name $vnetname -ResourceGroupName $sourceresourcegroupname
+
 #Start replication by creating replication protected item. Using a GUID for the name of the replication protected item to ensure uniqueness of name.
-$TempASRJob = New-AzRecoveryServicesAsrReplicationProtectedItem -AzureToAzure -AzureVmId $VM.Id -Name (New-Guid).Guid -ProtectionContainerMapping $PCMapping -AzureToAzureDiskReplicationConfiguration $OSDiskReplicationConfig -RecoveryResourceGroupId $RecoveryRG.ResourceId -RecoveryAvailabilityZone "2" -RecoveryProximityPlacementGroupId $ppg.Id -RecoveryAzureNetworkId $DestinatioRecoveryNetworkId 
+$TempASRJob = New-AzRecoveryServicesAsrReplicationProtectedItem -AzureToAzure -AzureVmId $VM.Id -Name (New-Guid).Guid -ProtectionContainerMapping $PCMapping -AzureToAzureDiskReplicationConfiguration $OSDiskReplicationConfig -RecoveryResourceGroupId $RecoveryRG.ResourceId -RecoveryAvailabilityZone "2" -RecoveryProximityPlacementGroupId $ppg.Id -RecoveryAzureNetworkId $DestinationRecoveryNetwork.Id 
 
 #Track Job status to check for completion
 while (($TempASRJob.State -eq "InProgress") -or ($TempASRJob.State -eq "NotStarted")){

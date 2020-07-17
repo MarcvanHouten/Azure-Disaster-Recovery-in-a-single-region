@@ -14,19 +14,27 @@ $Header['Content-Type'] = "application\json"
 
 
 #Get the values for the url and body
+$sourceresourcegroupname="ASR"
+$rgId=(Get-AzResourceGroup -Name $sourceresourcegroupname).ResourceId
+
+$Url = "https://management.azure.com/$rgId/providers/Microsoft.RecoveryServices/vaults/recoveryvault/replicationFabrics/westeurope/replicationProtectionContainers/zone1/switchprotection?api-version=2018-07-10"
+
+#GET Values for the JSON body
+$vmname="myname"
+$ProtectionContainername="zone1"
+$fabric_zone="westeurope"
+
+$PrimaryFabric = Get-AzRecoveryServicesAsrFabric -Name $fabric_zone
+$ProtContainer = Get-AzRecoveryServicesAsrProtectionContainer -Fabric $PrimaryFabric -Name $ProtectionContainername
+$ReplicationProtectedItem = Get-AzRecoveryServicesAsrReplicationProtectedItem -FriendlyName $vmname -ProtectionContainer $ProtContainer
 
 
-
-
-
-
-$Url = "https://management.azure.com/Subscriptions/302ce6c4-c9fd-41b7-9b92-d41405a15eb6/resourceGroups/ASR/providers/Microsoft.RecoveryServices/vaults/recoveryvault/replicationFabrics/westeurope/replicationProtectionContainers/zone1/switchprotection?api-version=2018-07-10"
 $body = @{
   "properties"= @{
-    "replicationProtectedItemName"= "6e0be008-83f0-4b18-9431-726ff9bed369"
+    "replicationProtectedItemName"= $ReplicationProtectedItem.Name
     "providerSpecificDetails" = @{
       "instanceType"= "A2A"
-      "recoveryContainerId" =  "/Subscriptions/302ce6c4-c9fd-41b7-9b92-d41405a15eb6/resourceGroups/ASR/providers/Microsoft.RecoveryServices/vaults/recoveryvault/replicationFabrics/westeurope/replicationProtectionContainers/zone1"
+      "recoveryContainerId" =  $ProtContainer.ID
      "recoveryAvailabilityZone" =  "1"
      "recoveryProximityPlacementGroupId" = "/subscriptions/302ce6c4-c9fd-41b7-9b92-d41405a15eb6/resourceGroups/ASR/providers/Microsoft.Compute/proximityPlacementGroups/sourceppg"
         "vmManagedDisks"= @(
