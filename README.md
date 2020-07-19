@@ -8,6 +8,6 @@ The failback script is using the ASR REST API because there is a bug (July 2020)
 
 Work in progress:
 * The failback of the reverse replicated VM is not included but the code can be copied from the replication script
-* You have to put the right information manually in the body of the API call script. Working on this currently
+
 
 ![Picture of test setup](/images/ASR_zone_to_zone.png)
