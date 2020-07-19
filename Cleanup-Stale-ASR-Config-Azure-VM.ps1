@@ -1,4 +1,4 @@
-$subscriptionId = "302ce6c4-c9fd-41b7-9b92-d41405a15eb6"
+$subscriptionId = ""
 $rgName = "ASRfailover"
 $vmName = "myname"
 
