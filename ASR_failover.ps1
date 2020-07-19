@@ -2,8 +2,8 @@
 $sourceresourcegroupname="ASR"
 $vmname="myname"
 
-#This step is optional
-#Stop-AzVM -ResourceGroupName $sourceresourcegroupname -Name $vmname
+#This step is optional but otherwise 2 same vm's will run in the same vnet
+Stop-AzVM -ResourceGroupName $sourceresourcegroupname -Name $vmname
 
 #Get recovery vault
 $recoveryvaultname="recoveryvault"
