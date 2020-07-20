@@ -13,5 +13,7 @@ All scripts are Powershell based because PPG is only supported through Powershel
 Work in progress:
 * The failback of the reverse replicated VM is not included but the code can be copied from the replication script
 
+**Note**
+Powershell cmdlets are changing over time. It could be that some of the commands will fail over these changes.
 
 ![Picture of test setup](/images/ASR_zone_to_zone.png)
