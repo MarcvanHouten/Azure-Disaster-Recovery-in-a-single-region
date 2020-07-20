@@ -13,7 +13,9 @@ All scripts are Powershell based because PPG is only supported through Powershel
 Work in progress:
 * The failback of the reverse replicated VM is not included but the code can be copied from the replication script
 
-**Note**
-Powershell cmdlets are changing over time. It could be that some of the commands will fail over these changes.
+**Notes**
+1. Powershell cmdlets are changing over time. It could be that some of the commands will fail over these changes.
+2. Check if the VM you want to protect had resource locks enabled. If the source VM has resource locks remove these first before running the scripts. Otherwise the scripts will fail. 
+3. Be carefull to use the latest version of an image becasue the ASR agent doesn't support always the latest images. See https://docs.microsoft.com/en-us/azure/site-recovery/azure-to-azure-support-matrix to check if your image version is supported 
 
 ![Picture of test setup](/images/ASR_zone_to_zone.png)
