@@ -1,4 +1,4 @@
-# ASR-zone-to-zone-with-ppg
+# ASR-zone-to-zone with Proximity Placement Groups
 
 This repository provides a code example how to implement an **Azure zone to zone** Disaster Recovery solution. This example also includes Proximity Placement Groups (PPG) so the Virtual Machine will also failover to another PPG.
 
