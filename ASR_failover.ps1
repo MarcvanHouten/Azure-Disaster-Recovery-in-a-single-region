@@ -2,7 +2,7 @@
 $sourceresourcegroupname="ASR"
 $vmname="myvmname"
 
-#This step is optional but otherwise 2 same vm's will run in the same vnet
+#This step is optional but otherwise 2 same vm's will run in the same vnet with the same IP.
 Stop-AzVM -ResourceGroupName $sourceresourcegroupname -Name $vmname
 
 #Get recovery vault
@@ -41,4 +41,4 @@ $Job_Failover.State
 
 $CommitFailoverJOb = Start-AzRecoveryServicesAsrCommitFailoverJob -ReplicationProtectedItem $ReplicationProtectedItem
 
-Get-AzRecoveryServicesAsrJob -Job $CommitFailoverJOb
+Get-AzRecoveryServicesAsrJob -Job $CommitFailoverJob

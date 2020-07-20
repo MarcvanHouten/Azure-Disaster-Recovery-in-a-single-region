@@ -1,6 +1,11 @@
 #API used: https://docs.microsoft.com/en-us/rest/api/site-recovery/replicationprotectioncontainers/switchprotection
 #The failback is done based on the REST API because the powershell is missing this feature
 
+#Set Recovery services vault context
+$sourceresourcegroupname="ASR"
+$recoveryvaultname="recoveryvault"
+$vault = Get-AzRecoveryServicesVault -Name $recoveryvaultname -ResourceGroupName $sourceresourcegroupname 
+Set-AzRecoveryServicesAsrVaultContext -Vault $vault
 
 #Create Protection container mapping (for fail back) between the Recovery and Primary Protection Containers with the Replication policy
 $ReplicationPolicyName="policyname"
@@ -25,6 +30,7 @@ while (($TempASRJob.State -eq "InProgress") -or ($TempASRJob.State -eq "NotStart
 Write-Output $TempASRJob.State
 
 #$Zone2toZone1Mapping = Get-AzRecoveryServicesAsrProtectionContainerMapping -ProtectionContainer $RecoveryProtContainer -Name "Zone2toZone1"
+#Get-AzRecoveryServicesAsrProtectionContainerMapping -Name "Zone2toZone1" -ProtectionContainer $RecoveryProtContainer
 
 
 #Get accesstoken from active Powershell session
@@ -38,21 +44,13 @@ $Header = @{"authorization" = "bearer $token"}
 $Header['Content-Type'] = "application\json"
 
 #Get the values for the url and body
-$sourceresourcegroupname="ASR"
 $rgId=(Get-AzResourceGroup -Name $sourceresourcegroupname).ResourceId
 $Url = "https://management.azure.com/$rgId/providers/Microsoft.RecoveryServices/vaults/recoveryvault/replicationFabrics/westeurope/replicationProtectionContainers/zone1/switchprotection?api-version=2018-07-10"
 
-
-#Set Recovery services vault context
-$recoveryvaultname="recoveryvault"
-$location="west Europe"
-$vault = New-AzRecoveryServicesVault -Name $recoveryvaultname -ResourceGroupName $sourceresourcegroupname -Location $location
-Set-AzRecoveryServicesAsrVaultContext -Vault $vault
-
 #GET Values for the JSON body
 $failoverresourcegroupname="ASRfailover"
-$vmname="myname"
-$recoveryppg="recppg"
+$vmname="myvmname"
+$recoveryppg="sourceppg"
 $CachestorageAccountname="cacheaccount99"
 
 $ReplicationProtectedItem = Get-AzRecoveryServicesAsrReplicationProtectedItem -FriendlyName $vmname -ProtectionContainer $ProtContainer
