@@ -3,10 +3,11 @@
 This repository provides a code example how to implement an **Azure zone to zone** Disaster Recovery solution. This example also includes Proximity Placement Groups (PPG) so the Virtual Machine will also failover to another PPG.
 
 This repository provides a couple of Powershell scripts:
-1. a script that creates the test environment as a starting point
-2. a script to configure the ASR protection of the virtual machine to another availability zone
-3. a script to initiate a failover
-4. and a script to re-protect the virtual machine so it replicates back to the original VM
+1. a script that creates the test environment as a starting point (ASR_CreateTestEnvironment.ps1)
+2. a script to configure the ASR protection of the virtual machine to another availability zone (ASR_replicate.ps1)
+3. a script to initiate a failover (ASR_failover.ps1)
+4. a script to re-protect the virtual machine so it replicates back to the original VM (ASR_re-protect.ps1)
+5. and a script failback the virtual machine to its original zone and ppg (ASR_failback.ps1) 
 
 All scripts are Powershell based because PPG is only supported through Powershell currently (July 2020). The re-protection script is using the ASR REST API because there is a bug (July 2020) in the Powershell cmdlet to configure the re-protection to the other zone correctly.  
 
