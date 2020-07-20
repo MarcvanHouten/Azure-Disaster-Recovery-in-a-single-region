@@ -3,7 +3,7 @@
 #Set variables
 $sourceresourcegroupname="ASR"
 $failoverresourcegroupname="ASRfailover"
-$vmname="myname"
+$vmname="myvmname"
 $location="west Europe"
 $newppgname="recppg"
 $vnetname="myvnet"
@@ -85,7 +85,7 @@ Write-Output $TempASRJob.State
 $ReplicationPolicy = Get-AzRecoveryServicesAsrPolicy -Name $ReplicationPolicyName
 
 #Create Protection container mapping between the Primary and Recovery Protection Containers with the Replication policy
-$TempASRJob = New-AzRecoveryServicesAsrProtectionContainerMapping -Name "A2APrimaryToRecovery" -Policy $ReplicationPolicy -PrimaryProtectionContainer $SourceProtContainer -RecoveryProtectionContainer $RecoveryProtContainer
+$TempASRJob = New-AzRecoveryServicesAsrProtectionContainerMapping -Name "Zone1toZone2" -Policy $ReplicationPolicy -PrimaryProtectionContainer $SourceProtContainer -RecoveryProtectionContainer $RecoveryProtContainer
 
 #Track Job status to check for completion
 while (($TempASRJob.State -eq "InProgress") -or ($TempASRJob.State -eq "NotStarted")){
@@ -96,7 +96,7 @@ while (($TempASRJob.State -eq "InProgress") -or ($TempASRJob.State -eq "NotStart
 #Check if the Job completed successfully. The updated job state of a successfully completed job should be "Succeeded"
 Write-Output $TempASRJob.State
 
-$PCMapping = Get-AzRecoveryServicesAsrProtectionContainerMapping -ProtectionContainer $SourceProtContainer -Name "A2APrimaryToRecovery"
+$PCMapping = Get-AzRecoveryServicesAsrProtectionContainerMapping -ProtectionContainer $SourceProtContainer -Name "Zone1toZone2"
 
 #Create Cache storage account for replication logs in the primary region
 $CachestorageAccountname="cacheaccount99"

@@ -59,7 +59,7 @@ $ReplicationProtectedItem = Get-AzRecoveryServicesAsrReplicationProtectedItem -F
 $recoveryProximityPlacementGroup = Get-AzProximityPlacementGroup -Name $recoveryppg -ResourceGroupName $sourceresourcegroupname
 $CacheStorageAccount=Get-AzStorageAccount -Name $CachestorageAccountname -ResourceGroupName $sourceresourcegroupname
 $VM = Get-AzVM -ResourceGroupName $failoverresourcegroupname -Name $vmname
-$OSdiskId = $vm.StorageProfile.OsDisk.ManagedDisk.Id
+$OSdiskId = $VM.StorageProfile.OsDisk.ManagedDisk.Id
 
 $body = @{
   "properties"= @{

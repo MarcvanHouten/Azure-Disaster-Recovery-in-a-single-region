@@ -1,6 +1,6 @@
 #Failover to another zone
 $sourceresourcegroupname="ASR"
-$vmname="myname"
+$vmname="myvmname"
 
 #This step is optional but otherwise 2 same vm's will run in the same vnet
 Stop-AzVM -ResourceGroupName $sourceresourcegroupname -Name $vmname
