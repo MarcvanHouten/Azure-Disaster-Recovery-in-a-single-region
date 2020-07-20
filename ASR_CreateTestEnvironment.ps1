@@ -72,6 +72,7 @@ $PIP = New-AzPublicIpAddress `
     -Location $Location `
     -sku 'Standard'
 
+#Create NIC
 $NIC = New-AzNetworkInterface `
 -Name $NICName `
 -ResourceGroupName $ResourceGroupName `
@@ -81,10 +82,10 @@ $NIC = New-AzNetworkInterface `
 -PrivateIpAddress '10.1.0.4' `
 -EnableAcceleratedNetworking 
 
-#################
-
+#Create credential object
 $Credential=New-Object PSCredential($UserName,$Password)
 
+#Create VM config
 $VirtualMachine = New-AzVMConfig `
    -VMName $vmname `
    -VMSize $vmsize `
@@ -95,7 +96,8 @@ $VirtualMachine = Set-AzVMOperatingSystem -VM $VirtualMachine -Linux -ComputerNa
 $VirtualMachine = Add-AzVMNetworkInterface -VM $VirtualMachine -Id $NIC.Id
 $VirtualMachine = Set-AzVMSourceImage -VM $VirtualMachine -PublisherName 'RedHat' -Offer 'RHEL' -Skus '7.7' -version '7.7.2020051912' 
 
-New-AzVM -ResourceGroupName $ResourceGroupName -Location $Location -VM $VirtualMachine -OpenPorts 22 -Verbose
+#Create VM
+New-AzVM -ResourceGroupName $ResourceGroupName -Location $Location -VM $VirtualMachine -Verbose
 
 <#
 Get-AzVMImageSku `
