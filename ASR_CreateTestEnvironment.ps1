@@ -1,6 +1,6 @@
 #Create Azure Site Recovery environment
 $UserName="demouser"
-$Password="Password@123" | ConvertTo-SecureString -Force -AsPlainText
+$Password="<your password here>" | ConvertTo-SecureString -Force -AsPlainText
 $resourcegroupname="ASR"
 $location="westeurope"
 $vmname="myvmname"
