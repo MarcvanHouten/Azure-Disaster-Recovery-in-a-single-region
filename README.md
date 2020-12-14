@@ -1,4 +1,4 @@
-# Azure Disaster Recovery between availability zones in a single region based
+# Azure Disaster Recovery between availability zones in a single region
 
 This repository provides a code example how to implement Disaster Recovery of Azure Virtual Machines between availability zones in a single region based on 	[Azure Site Recovery (ASR) zone-to-zone](https://docs.microsoft.com/en-us/azure/site-recovery/azure-to-azure-how-to-enable-zone-to-zone-disaster-recovery). 
 
