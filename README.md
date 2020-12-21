@@ -20,4 +20,4 @@ All scripts are Powershell based because at the time of writing this PPG was onl
 2. Check if the VM you want to protect has resource locks enabled. If the source VM has resource locks remove these first before running the scripts. Otherwise the scripts will fail. 
 3. Be carefull using the latest version of an marketplace image because the ASR agent doesn't support always the latest images. See https://docs.microsoft.com/en-us/azure/site-recovery/azure-to-azure-support-matrix to check if your image version is supported 
 
-![Picture of test setup](/images/ASR_zone_to_zone.png)
+![Picture of test setup](/images/DRinasingleregion.jpg)
