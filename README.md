@@ -6,7 +6,7 @@ This repository provides code examples how to implement Disaster Recovery(DR) of
 
 The code examples shows how to setup the protection of a virtual machines, how to failover the virtual machine in case of an availability zone failure and how to re-protect the virtual machine after the failover so the virtual machine can failback to it's original availability zone when the failed availability zones has been restored. 
 
-This example includes the use of *Proximity Placement Groups (PPG)* to show that it's also possible to use this solution for virtual machines that require to be physically located as close as possible to each other. The virtual machine uses a static ip address to demonstrate that the virtual machines keeps the same ip address after the failover and failback and therefore it's also a suitable solution for applications that cannot handle a change of ip address during a DR situation.
+This example includes the use of [Proximity Placement Groups (PPG)](https://docs.microsoft.com/en-us/azure/virtual-machines/co-location#using-proximity-placement-groups) to show that it's also possible to use this solution for virtual machines that require to be physically located as close as possible to each other. The virtual machine uses a static ip address to demonstrate that the virtual machines keeps the same ip address after the failover and failback and therefore it's also a suitable solution for applications that cannot handle a change of ip address during a DR situation.
 
 All scripts in this repository are based on Powershell because at the time of writing this article PPG were only supported through Powershell. 
 
