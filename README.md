@@ -2,9 +2,9 @@
 
 Let's start with a disclaimer: Microsoft Azure services rapidly evolve so keep in mind that the information shared in this article can become outdated over time
 
-This repository provides a code example how to implement Disaster Recovery(DR) of Azure Virtual Machines between availability zones in a single region based on [Azure Site Recovery (ASR) zone-to-zone](https://docs.microsoft.com/en-us/azure/site-recovery/azure-to-azure-how-to-enable-zone-to-zone-disaster-recovery). 
+This repository provides code examples how to implement Disaster Recovery(DR) of Azure Virtual Machines between availability zones in a single region based on [Azure Site Recovery (ASR) zone-to-zone](https://docs.microsoft.com/en-us/azure/site-recovery/azure-to-azure-how-to-enable-zone-to-zone-disaster-recovery). 
 
-The example shows how to setup the protection of a virtual machines, how to failover the virtual machine in case of an availability zone failure but also how to re-protect the virtual machine so the virtual machine can failback to it's original availability zone when the failed availability zones has been restored. 
+The code examples shows how to setup the protection of a virtual machines, how to failover the virtual machine in case of an availability zone failure and how to re-protect the virtual machine after the failover so the virtual machine can failback to it's original availability zone when the failed availability zones has been restored. 
 
 This example includes the use of *Proximity Placement Groups (PPG)* to show that it's also possible to use this solution for virtual machines that require to be physically located as close as possible to each other. The virtual machine uses a static ip address to demonstrate that the virtual machines keeps the same ip address after the failover and failback and therefore it's also a suitable solution for applications that cannot handle a change of ip address during a DR situation.
 
