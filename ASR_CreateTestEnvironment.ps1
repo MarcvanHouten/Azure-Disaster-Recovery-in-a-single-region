@@ -1,6 +1,6 @@
 #Create Azure Site Recovery environment
 $UserName="demouser"
-$Password="<your password here>" | ConvertTo-SecureString -Force -AsPlainText
+$Password="<please specify password for demouser here>" | ConvertTo-SecureString -Force -AsPlainText
 $resourcegroupname="ASR"
 $location="westeurope"
 $vmname="myvmname"
@@ -62,7 +62,7 @@ $Vnet = New-AzVirtualNetwork `
     -Subnet $Subnet
 
 #Create PIP
-$DNSNameLabel =  "pip" + (get-random) # mydnsname.westus.cloudapp.azure.com
+$DNSNameLabel =  "pip" + (get-random) 
 $PublicIPAddressName = "MyPIP"
 $PIP = New-AzPublicIpAddress `
     -Name $PublicIPAddressName `
@@ -70,7 +70,8 @@ $PIP = New-AzPublicIpAddress `
     -ResourceGroupName $ResourceGroupName `
     -AllocationMethod 'static' `
     -Location $Location `
-    -sku 'Standard'
+    -sku 'Standard' 
+
 
 #Create NIC
 $NIC = New-AzNetworkInterface `
@@ -94,12 +95,12 @@ $VirtualMachine = New-AzVMConfig `
   
 $VirtualMachine = Set-AzVMOperatingSystem -VM $VirtualMachine -Linux -ComputerName 'vm1' -Credential $Credential 
 $VirtualMachine = Add-AzVMNetworkInterface -VM $VirtualMachine -Id $NIC.Id
-$VirtualMachine = Set-AzVMSourceImage -VM $VirtualMachine -PublisherName 'RedHat' -Offer 'RHEL' -Skus '7.7' -version '7.7.2020051912' 
+$VirtualMachine = Set-AzVMSourceImage -VM $VirtualMachine -PublisherName 'RedHat' -Offer 'RHEL' -Skus '7.7' -version latest 
 
 #Create VM
 New-AzVM -ResourceGroupName $ResourceGroupName -Location $Location -VM $VirtualMachine -Verbose
 
-<#
+<# command to find a gallery image
 Get-AzVMImageSku `
    -Location $Location `
    -PublisherName "RedHat" `
