@@ -1,22 +1,24 @@
-#API used: https://docs.microsoft.com/en-us/rest/api/site-recovery/replicationprotectioncontainers/switchprotection
-#The failback is done based on the REST API because the powershell is missing this feature
-
+#Use the recovery protection container, new cache storage account in West US and the source region VM resource group
 #Set Recovery services vault context
 $sourceresourcegroupname="ASR"
 $recoveryvaultname="recoveryvault"
+$recoveryppg="recppg"
+$vmname="myvmname"
+$CachestorageAccountname="cacheaccount99"
+$ReplicationPolicyName="policyname"
+$ProtectionContainername="zone1"
+$RecoveryProtectionContainername="zone2"
+$fabric_zone="westeurope"
+
+#Get Vault and Context
 $vault = Get-AzRecoveryServicesVault -Name $recoveryvaultname -ResourceGroupName $sourceresourcegroupname 
 Set-AzRecoveryServicesAsrVaultContext -Vault $vault
 
 #Create Protection container mapping (for fail back) between the Recovery and Primary Protection Containers with the Replication policy
-$ReplicationPolicyName="policyname"
-$RecoveryProtectionContainername="zone2"
-$fabric_zone="westeurope"
-$ProtectionContainername="zone1"
-
 $PrimaryFabric = Get-AzRecoveryServicesAsrFabric -Name $fabric_zone
+$RecoveryProtContainer = Get-AzRecoveryServicesAsrProtectionContainer -Fabric $PrimaryFabric -Name $RecoveryProtectionContainername
 $ProtContainer = Get-AzRecoveryServicesAsrProtectionContainer -Fabric $PrimaryFabric -Name $ProtectionContainername
 $ReplicationPolicy = Get-AzRecoveryServicesAsrPolicy -Name $ReplicationPolicyName
-$RecoveryProtContainer = Get-AzRecoveryServicesAsrProtectionContainer -Fabric $PrimaryFabric -Name $RecoveryProtectionContainername
 
 $TempASRJob = New-AzRecoveryServicesAsrProtectionContainerMapping -Name "Zone2toZone1" -Policy $ReplicationPolicy -PrimaryProtectionContainer $RecoveryProtContainer -RecoveryProtectionContainer $ProtContainer
 
@@ -28,61 +30,19 @@ while (($TempASRJob.State -eq "InProgress") -or ($TempASRJob.State -eq "NotStart
 
 #Check if the Job completed successfully. The updated job state of a successfully completed job should be "Succeeded"
 Write-Output $TempASRJob.State
+$Zone2toZone1Mapping = Get-AzRecoveryServicesAsrProtectionContainerMapping -ProtectionContainer $RecoveryProtContainer -Name "Zone2toZone1"
 
-#$Zone2toZone1Mapping = Get-AzRecoveryServicesAsrProtectionContainerMapping -ProtectionContainer $RecoveryProtContainer -Name "Zone2toZone1"
-#Get-AzRecoveryServicesAsrProtectionContainerMapping -Name "Zone2toZone1" -ProtectionContainer $RecoveryProtContainer
-
-
-#Get accesstoken from active Powershell session
-$currentAzureContext = Get-AzContext
-$azureRmProfile = [Microsoft.Azure.Commands.Common.Authentication.Abstractions.AzureRmProfileProvider]::Instance.Profile;
-$profileClient = New-Object Microsoft.Azure.Commands.ResourceManager.Common.RMProfileClient($azureRmProfile);
-$token = $profileClient.AcquireAccessToken($currentAzureContext.Subscription.TenantId).AccessToken;
-
-#Creating the request header.
-$Header = @{"authorization" = "bearer $token"}
-$Header['Content-Type'] = "application\json"
-
-#Get the values for the url and body
-$rgId=(Get-AzResourceGroup -Name $sourceresourcegroupname).ResourceId
-$Url = "https://management.azure.com/$rgId/providers/Microsoft.RecoveryServices/vaults/recoveryvault/replicationFabrics/westeurope/replicationProtectionContainers/zone1/switchprotection?api-version=2018-07-10"
-
-#GET Values for the JSON body
-$failoverresourcegroupname="ASRfailover"
-$vmname="myvmname"
-$recoveryppg="sourceppg"
-$CachestorageAccountname="cacheaccount99"
-
+#Re-protect the VM
 $ReplicationProtectedItem = Get-AzRecoveryServicesAsrReplicationProtectedItem -FriendlyName $vmname -ProtectionContainer $ProtContainer
-$recoveryProximityPlacementGroup = Get-AzProximityPlacementGroup -Name $recoveryppg -ResourceGroupName $sourceresourcegroupname
 $CacheStorageAccount=Get-AzStorageAccount -Name $CachestorageAccountname -ResourceGroupName $sourceresourcegroupname
-$VM = Get-AzVM -ResourceGroupName $failoverresourcegroupname -Name $vmname
-$OSdiskId = $VM.StorageProfile.OsDisk.ManagedDisk.Id
 
-$body = @{
-  "properties"= @{
-    "replicationProtectedItemName"= $ReplicationProtectedItem.Name
-    "providerSpecificDetails" = @{
-    "instanceType"= "A2A"
-    "recoveryContainerId" =  $ProtContainer.ID
-    "recoveryAvailabilityZone" =  "1"
-    "recoveryProximityPlacementGroupId" = $recoveryProximityPlacementGroup.Id
-    "vmManagedDisks"= @(
-		@{
-          "diskId"= $OSdiskId
-          "primaryStagingAzureStorageAccountId"= $CacheStorageAccount.Id
-          "recoveryResourceGroupId"= $rgId
-          "recoveryReplicaDiskAccountType"= "Premium_LRS"
-          "recoveryTargetDiskAccountType"= "Premium_LRS"
-        }
-		
-		)
-      "vmDisks"= @()
-      "recoveryResourceGroupId"= $rgId
-       "policyId" = $ReplicationPolicy.ID 
-    }
-  }
-}
+#Update the protectiondirection back to zone #1
+$Recppg = Get-AzProximityPlacementGroup -Name $recoveryppg 
+$sourcegroupname=Get-AzResourceGroup -Name $sourceresourcegroupname
 
-$BodyJson = ConvertTo-Json -Depth 8 -InputObject $body
-$getpd = Invoke-WebRequest -Uri $Url -Headers $Header -Method 'POST' -ContentType "application/json" -Body $BodyJson  -UseBasicParsing
+Update-AzRecoveryServicesAsrProtectionDirection -AzureToAzure `
+    -ReplicationProtectedItem $ReplicationProtectedItem `
+    -ProtectionContainerMapping $Zone2toZone1Mapping `
+    -LogStorageAccountId $CacheStorageAccount.Id `
+    -RecoveryResourceGroupID $sourcegroupname.ResourceId `
+    -RecoveryProximityPlacementGroupId $Recppg.Id

@@ -7,6 +7,13 @@ $vmname="myvmname"
 $location="west Europe"
 $newppgname="recppg"
 $vnetname="myvnet"
+$recoveryvaultname="recoveryvault"
+$fabric_zone="westeurope"
+$SourceProtectionContainername="zone1"
+$RecoveryProtectionContainername="zone2"
+$ReplicationPolicyName="policyname"
+$CachestorageAccountname="cacheaccount99"
+
 
 #Create failover resource group
 New-AzResourceGroup -Name $failoverresourcegroupname -Location $location
@@ -16,7 +23,6 @@ $VM = Get-AzVM -ResourceGroupName $sourceresourcegroupname -Name $vmname
 Write-Output $VM
 
 #Create a new Recovery services vault in the recovery region
-$recoveryvaultname="recoveryvault"
 $vault = New-AzRecoveryServicesVault -Name $recoveryvaultname -ResourceGroupName $sourceresourcegroupname -Location $location
 Write-Output $vault
 
@@ -24,7 +30,6 @@ Write-Output $vault
 Set-AzRecoveryServicesAsrVaultContext -Vault $vault
 
 #Create Primary ASR fabric
-$fabric_zone="westeurope"
 $TempASRJob = New-AzRecoveryServicesAsrFabric -Azure -Location  $location  -Name $fabric_zone
 
 #Track Job status to check for completion
@@ -40,7 +45,6 @@ Write-Output $TempASRJob.State
 $PrimaryFabric = Get-AzRecoveryServicesAsrFabric -Name $fabric_zone
 
 #Create a Protection container in the primary Azure region (within the Primary fabric)
-$SourceProtectionContainername="zone1"
 $TempASRJob = New-AzRecoveryServicesAsrProtectionContainer -InputObject $PrimaryFabric -Name $SourceProtectionContainername
 
 # Track Job status to check for completion
@@ -55,7 +59,6 @@ Write-Output $TempASRJob.State
 $SourceProtContainer = Get-AzRecoveryServicesAsrProtectionContainer -Fabric $PrimaryFabric -Name $SourceProtectionContainername
 
 #Create a recovery container
-$RecoveryProtectionContainername="zone2"
 $TempASRJob = New-AzRecoveryServicesAsrProtectionContainer -InputObject $PrimaryFabric -Name $RecoveryProtectionContainername
 
 #Track Job status to check for completion
@@ -71,7 +74,6 @@ Write-Output $TempASRJob.State
 $RecoveryProtContainer = Get-AzRecoveryServicesAsrProtectionContainer -Fabric $PrimaryFabric -Name $RecoveryProtectionContainername
 
 #Create replication policy
-$ReplicationPolicyName="policyname"
 $TempASRJob = New-AzRecoveryServicesAsrPolicy -AzureToAzure -Name $ReplicationPolicyName -RecoveryPointRetentionInHours 24 -ApplicationConsistentSnapshotFrequencyInHours 4
 
 #Track Job status to check for completion
@@ -99,7 +101,6 @@ Write-Output $TempASRJob.State
 $PCMapping = Get-AzRecoveryServicesAsrProtectionContainerMapping -ProtectionContainer $SourceProtContainer -Name "Zone1toZone2"
 
 #Create Cache storage account for replication logs in the primary region
-$CachestorageAccountname="cacheaccount99"
 $CacheStorageAccount = New-AzStorageAccount -Name $CachestorageAccountname -ResourceGroupName $sourceresourcegroupname -Location $location -SkuName Standard_LRS -Kind Storage
 
 #$CacheStorageAccount=Get-AzStorageAccount -Name $CachestorageAccountname -ResourceGroupName $sourceresourcegroupname

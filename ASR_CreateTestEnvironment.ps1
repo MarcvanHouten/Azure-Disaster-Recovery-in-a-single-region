@@ -70,8 +70,7 @@ $PIP = New-AzPublicIpAddress `
     -ResourceGroupName $ResourceGroupName `
     -AllocationMethod 'static' `
     -Location $Location `
-    -sku 'Standard' 
-
+    -sku 'Standard'
 
 #Create NIC
 $NIC = New-AzNetworkInterface `

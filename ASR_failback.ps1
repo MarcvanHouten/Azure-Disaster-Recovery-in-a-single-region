@@ -1,24 +1,24 @@
-#Failback to another zone
+#Failback to the original zone
 $sourceresourcegroupname="ASRfailover"
 $vmname="myvmname"
+$recoveryvaultname="recoveryvault"
+$resourcegroupname="ASR"
+$fabric_zone="westeurope"
+$ProtectionContainername="zone2"
 
 #This step simulates a failure of the VM otherwise 2 same vm's will run in the same vnet with the same IP.
 Stop-AzVM -ResourceGroupName $sourceresourcegroupname -Name $vmname
 
 #Get recovery vault
-$recoveryvaultname="recoveryvault"
-$resourcegroupname="ASR"
 $vault = Get-AzRecoveryServicesVault -Name $recoveryvaultname -ResourceGroupName $resourcegroupname
 
 #Setting the vault context.
 Set-AzRecoveryServicesAsrVaultContext -Vault $vault
 
 #Get fabric
-$fabric_zone="westeurope"
 $PrimaryFabric = Get-AzRecoveryServicesAsrFabric -Name $fabric_zone
 
 #Get container
-$ProtectionContainername="zone2"
 $ProtContainer = Get-AzRecoveryServicesAsrProtectionContainer -Fabric $PrimaryFabric -Name $ProtectionContainername
 
 #Get protectedItem

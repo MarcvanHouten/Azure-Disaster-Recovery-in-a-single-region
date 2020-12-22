@@ -14,18 +14,18 @@ The re-protection script is using the ASR REST API because there is a bug (July 
 
 This repository provides a couple of Powershell scripts:
 1. a script that creates the test environment as a starting point (ASR_CreateTestEnvironment.ps1)
-2. a script to configure the ASR protection of the virtual machine to another availability zone (ASR_replicate.ps1)
+2. a script to configure the ASR protection of the virtual machine to another availability zone (ASR_protect.ps1)
 3. a script to initiate a failover (ASR_failover.ps1)
 4. a script to re-protect the virtual machine so it replicates back to the original zone (ASR_re-protect.ps1)
 5. and a script to failback the virtual machine to its original zone and ppg (ASR_failback.ps1) 
 
-
 **Notes**
 1. Powershell cmdlets are changing over time. It could be that some of the commands will fail because of these changes. The scripts are tested with PowerShell version 7.1.0
 2. This examples was tested in the West Europe region. Not all regions support ASR zone to zone yet. Please check the [link](https://docs.microsoft.com/en-us/azure/site-recovery/azure-to-azure-how-to-enable-zone-to-zone-disaster-recovery) above to validate if your prefered region is supported.
-3. Check if the VM you want to protect has resource locks enabled. If the source VM has resource locks remove these first before running the scripts. Otherwise the scripts will fail. 
-4. Be carefull using the latest version of an marketplace image because the ASR agent doesn't support always the latest images. See https://docs.microsoft.com/en-us/azure/site-recovery/azure-to-azure-support-matrix to check if your image version is supported
-5. The scripts are developed for test purposes only, do not use these in production environments.e.g. the script exposes a SSH port 22 directly to the Internet. This not a recommended practice.
+3. Check if the VM you want to protect has resource locks enabled. If the source VM has resource locks remove these first before running the scripts. Otherwise the scripts will fail.
+4. Be aware that the failover will use a differenct resource group. Currenty (Nov 2020) ASR doesn't support failover to the same resource group yet.   
+5. Be carefull using the latest version of an marketplace image because the ASR agent doesn't support always the latest images. See https://docs.microsoft.com/en-us/azure/site-recovery/azure-to-azure-support-matrix to check if your image version is supported
+6. The scripts are developed for test purposes only, do not use these in production environments.e.g. the script exposes a SSH port directly to the Internet. This not a recommended practice.
 
 The following pictures shows the setup and use case the scripts provide.
 
