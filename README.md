@@ -14,7 +14,7 @@ This repository provides a couple of Powershell scripts:
 1. a script that creates the test environment as a starting point (ASR_CreateTestEnvironment.ps1)
 2. a script to configure the ASR protection of the virtual machine to another availability zone (ASR_protect.ps1)
 3. a script to initiate a failover (ASR_failover.ps1)
-4. a script to re-protect the virtual machine so all changes to the virtual machine are replicated back to vault (ASR_re-protect.ps1)
+4. a script to re-protect the virtual machine so all changes to the virtual machine are replicated back to the recovery vault (ASR_re-protect.ps1)
 5. and a script to failback the virtual machine to its original zone and ppg (ASR_failback.ps1) 
 
 **Notes**
@@ -23,8 +23,8 @@ This repository provides a couple of Powershell scripts:
 3. Check if the VM you want to protect has resource locks enabled. If the source VM has resource locks remove these first before running the scripts. Otherwise the scripts will fail.
 4. Be aware that the failover will use a differenct resource group. Currenty (Nov 2020) ASR doesn't support failover to the same resource group yet.   
 5. Be carefull using the latest version of an marketplace image because the ASR agent doesn't support always the latest images. See https://docs.microsoft.com/en-us/azure/site-recovery/azure-to-azure-support-matrix to check if your image version is supported
-6. The scripts are developed for test purposes only, do not use these in production environments.e.g. the script exposes a SSH port directly to the Internet. This not a recommended practice.
+6. The scripts are developed for test purposes only. Do not use these in production environments.e.g. the script exposes a SSH port directly to the Internet. This is not a recommended practice.
 
-The following pictures shows the setup and use case the scripts provide.
+The following picture shows the setup and use case the scripts provide.
 
 ![Picture of test setup](/images/DRinasingleregion.jpg)
