@@ -8,15 +8,13 @@ The code examples shows how to setup the protection of a virtual machines, how t
 
 This example includes the use of [Proximity Placement Groups (PPG)](https://docs.microsoft.com/en-us/azure/virtual-machines/co-location#using-proximity-placement-groups) to show that it's also possible to use this solution for virtual machines that require to be physically located as close as possible to each other. The virtual machine uses a static ip address to demonstrate that the virtual machines keeps the same ip address after the failover and failback and therefore it's also a suitable solution for applications that cannot handle a change of ip address during a DR situation.
 
-All scripts in this repository are based on Powershell because at the time of writing this article PPG were only supported through Powershell. 
-
-The re-protection script is using the ASR REST API because there is a bug (July 2020) in the Powershell cmdlet to configure the re-protection to the other zone correctly. CHECK 
+All scripts in this repository are based on Powershell because at the time of writing this article PPG's were only supported through Powershell. 
 
 This repository provides a couple of Powershell scripts:
 1. a script that creates the test environment as a starting point (ASR_CreateTestEnvironment.ps1)
 2. a script to configure the ASR protection of the virtual machine to another availability zone (ASR_protect.ps1)
 3. a script to initiate a failover (ASR_failover.ps1)
-4. a script to re-protect the virtual machine so it replicates back to the original zone (ASR_re-protect.ps1)
+4. a script to re-protect the virtual machine so all changes to the virtual machine are replicated back to vault (ASR_re-protect.ps1)
 5. and a script to failback the virtual machine to its original zone and ppg (ASR_failback.ps1) 
 
 **Notes**
