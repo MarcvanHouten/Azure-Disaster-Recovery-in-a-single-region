@@ -18,7 +18,7 @@ This repository provides a couple of Powershell scripts:
 5. and a script to failback the virtual machine to its original zone and ppg (ASR_failback.ps1) 
 
 **Notes**
-1. Powershell cmdlets are changing over time. It could be that some of the commands will fail because of these changes. The scripts are tested with PowerShell version 7.1.0
+1. Powershell cmdlets change over time. It could be that some of the commands will fail because of these changes. The scripts are tested with PowerShell version 7.1.0 and in November 2020
 2. This examples was tested in the West Europe region. Not all regions support ASR zone to zone yet. Please check the [link](https://docs.microsoft.com/en-us/azure/site-recovery/azure-to-azure-how-to-enable-zone-to-zone-disaster-recovery) above to validate if your prefered region is supported.
 3. Check if the VM you want to protect has resource locks enabled. If the source VM has resource locks remove these first before running the scripts. Otherwise the scripts will fail.
 4. Be aware that the failover will use a differenct resource group. Currenty (Nov 2020) ASR doesn't support failover to the same resource group yet.   
